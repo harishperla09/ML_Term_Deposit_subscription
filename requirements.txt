@@ -2,6 +2,6 @@ streamlit
 scikit-learn
 numpy
 pandas
-matplot
+matplotlib
+seaborn
 xgboost
-
