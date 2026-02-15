@@ -261,7 +261,7 @@ def main():
     with st.sidebar:
         st.header("About the Project")
         st.write("""
-        This project compares 6 machine learning models on the Bank Marketing dataset.
+        This project implements 6 machine learning models on the Bank Marketing dataset.
         
         Test Dataset: 4,121 records, 20 features
         Task: Binary classification (yes/no)
@@ -404,61 +404,6 @@ def main():
                             report = classification_report(y_test, y_pred, 
                                                           target_names=['No', 'Yes'])
                             st.text(report)
-                            
-                            # Model Comparison Section
-                            st.markdown("---")
-                            st.header("Compare All Models")
-                            
-                            if st.button("Run All Models Comparison", type="primary"):
-                                with st.spinner("Evaluating all models..."):
-                                    comparison_results = []
-                                    
-                                    for model_name, model in models.items():
-                                        # Make predictions
-                                        y_pred_compare = model.predict(X_test_processed)
-                                        
-                                        # Get probabilities
-                                        if hasattr(model, 'predict_proba'):
-                                            y_pred_proba_compare = model.predict_proba(X_test_processed)
-                                        else:
-                                            y_pred_proba_compare = None
-                                        
-                                        # Calculate metrics
-                                        metrics_compare = calculate_metrics(y_test, y_pred_compare, y_pred_proba_compare)
-                                        
-                                        comparison_results.append({
-                                            'Model': model_name,
-                                            'Accuracy': metrics_compare['Accuracy'],
-                                            'AUC': metrics_compare['AUC'],
-                                            'Precision': metrics_compare['Precision'],
-                                            'Recall': metrics_compare['Recall'],
-                                            'F1': metrics_compare['F1 Score'],
-                                            'MCC': metrics_compare['MCC']
-                                        })
-                                    
-                                    # Create comparison dataframe
-                                    comparison_df = pd.DataFrame(comparison_results)
-                                    
-                                    st.subheader("Model Comparison Results")
-                                    st.dataframe(comparison_df.style.highlight_max(axis=0, subset=['Accuracy', 'AUC', 'Precision', 'Recall', 'F1', 'MCC']), 
-                                                use_container_width=True)
-                                    
-                                    # Plot metrics comparison
-                                    st.subheader("Metric Comparison Visualization")
-                                    
-                                    metrics_to_plot = ['Accuracy', 'AUC', 'Precision', 'Recall', 'F1', 'MCC']
-                                    
-                                    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-                                    axes = axes.ravel()
-                                    
-                                    for idx, metric in enumerate(metrics_to_plot):
-                                        axes[idx].barh(comparison_df['Model'], comparison_df[metric], color='steelblue')
-                                        axes[idx].set_xlabel(metric, fontsize=10)
-                                        axes[idx].set_xlim(0, 1)
-                                        axes[idx].grid(axis='x', alpha=0.3)
-                                    
-                                    plt.tight_layout()
-                                    st.pyplot(fig)
                         
             except Exception as e:
                 st.error(f"Error: {str(e)}")
